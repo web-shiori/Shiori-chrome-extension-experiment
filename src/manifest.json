@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "description": "shiori-web-chrome-extension-experiment",
   "browser_action": {
+    "default_icon": {
+      "16": "img/icon16.png",
+      "24": "img/icon16.png",
+      "32": "img/icon16.png"
+    },
     "default_popup": "html/main.html"
   }
 }

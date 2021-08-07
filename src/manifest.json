@@ -1,0 +1,9 @@
+{
+  "manifest_version": 2,
+  "name": "shiori-web-chrome-extension-experiment",
+  "version": "1.0.0",
+  "description": "shiori-web-chrome-extension-experiment",
+  "browser_action": {
+    "default_popup": "html/main.html"
+  }
+}

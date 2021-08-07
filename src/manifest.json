@@ -12,6 +12,6 @@
     },
     "default_popup": "html/popup.html"
   },
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "author": "MasatoraAtarashi"
 }

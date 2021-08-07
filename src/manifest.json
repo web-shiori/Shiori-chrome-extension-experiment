@@ -9,6 +9,6 @@
       "24": "img/icon16.png",
       "32": "img/icon16.png"
     },
-    "default_popup": "html/main.html"
+    "default_popup": "html/popup.html"
   }
 }

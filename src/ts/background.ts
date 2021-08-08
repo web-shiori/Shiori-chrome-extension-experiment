@@ -7,15 +7,14 @@ chrome.runtime.onMessage.addListener((request) => {
 })
 
 function setVideoPlayBackPosition(videoPlayBackPosition: number) {
-    // alert("setVideoPlayBackPosition")
-    chrome.tabs.getSelected(tab => {
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
         // @ts-ignore
-        chrome.tabs.executeScript(tab.id, {
+        chrome.tabs.executeScript(tabs[0].id, {
             code: `const videoPlayBackPosition = ` + videoPlayBackPosition
         },() => {
             // alert(`videoPlayBackPositio: ${videoPlayBackPosition}`)
             // @ts-ignore
-            chrome.tabs.executeScript(tab.id, {
+            chrome.tabs.executeScript(tabs[0].id, {
                 code: `
                     document.getElementsByTagName('video')[0].currentTime = videoPlayBackPosition;
                 `
@@ -27,16 +26,16 @@ function setVideoPlayBackPosition(videoPlayBackPosition: number) {
 }
 
 function setScrollPosition(scrollPositionX: number, scrollPositionY: number) {
-    chrome.tabs.getSelected(tab => {
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
         // @ts-ignore
-        chrome.tabs.executeScript(tab.id, {
+        chrome.tabs.executeScript(tabs[0].id, {
             code: `
                 const scrollPositionX = ${scrollPositionX}
                 const scrollPositionY = ${scrollPositionY}
             `
         },() => {
             // @ts-ignore
-            chrome.tabs.executeScript(tab.id, {
+            chrome.tabs.executeScript(tabs[0].id, {
                 code: `
                     window.scrollTo(scrollPositionX, scrollPositionY);
                 `

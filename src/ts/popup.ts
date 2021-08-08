@@ -232,9 +232,9 @@ button_save?.addEventListener('click', function () {
 })
 
 const button_load = document.getElementById('button-load')
-button_load?.addEventListener('click', function () {
-    const res: Promise<MetaData | null> = getByStorage(StorageKey);
-    console.log(res)
+button_load?.addEventListener('click', async function () {
+    const res = await getByStorage(StorageKey);
+    console.log('GET', res);
 })
 
 

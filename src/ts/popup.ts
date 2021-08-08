@@ -8,18 +8,21 @@ interface MetaData {
     videoPlayBackPosition: number;
 }
 
-function getVideoPlayBackPosition(): number {
-    chrome.tabs.getSelected(tab => {
-        // @ts-ignore
-        chrome.tabs.executeScript(tab.id, {
-            code: `
+function getVideoPlayBackPosition() {
+    return new Promise((resolve) => {
+        chrome.tabs.getSelected(tab => {
+            // @ts-ignore
+            chrome.tabs.executeScript(tab.id, {
+                code: `
                 document.getElementsByTagName('video')[0].currentTime;
             `
-        }, function (result) {
-            return result[0]
+            },(result) => {
+                console.log(`videoPlayBackPosition: ${result[0]}`)
+                const videoPlayBackPosition: number = Number(result[0])
+                resolve({ videoPlayBackPosition })
+            })
         })
     })
-    return 0
 }
 
 function getScrollPositionX(): number {
@@ -103,7 +106,9 @@ async function getMetaData() {
     const pY = await getScrollPositionY()
     // @ts-ignore
     positionY = pY.positionY
-    videoPlayBackPosition = getVideoPlayBackPosition()
+    const vpbp = await getVideoPlayBackPosition()
+    // @ts-ignore
+    videoPlayBackPosition = vpbp.videoPlayBackPosition
     console.log("getMetaData")
     console.log(`title: ${title}`)
     console.log(`url: ${url}`)

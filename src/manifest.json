@@ -12,6 +12,14 @@
     },
     "default_popup": "html/popup.html"
   },
-  "permissions": ["activeTab", "storage"],
+  "background": {
+    "scripts": ["js/background.js"]
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "http://*/",
+    "https://*/"
+  ],
   "author": "MasatoraAtarashi"
 }

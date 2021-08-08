@@ -1,3 +1,5 @@
+import request = chrome.permissions.request;
+
 interface MetaData {
     title: string;
     url: string;
@@ -142,56 +144,27 @@ const button_load = document.getElementById('button-load')
 button_load?.addEventListener('click', async function () {
     const res = await getByStorage(StorageKey);
     console.log('GET', res);
-    // const url = res?.url ?? ""
-    // await chrome.tabs.create({
-    //     url
-    // });
-    setScrollPosition(res?.positionX ?? 0, res?.positionY ?? 0)
-    setVideoPlayBackPosition(res?.videoPlayBackPosition ?? 0)
+    const url = res?.url ?? ""
+    alert(res?.videoPlayBackPosition)
+    const sendData = {
+        positionX: res?.positionX ?? 0,
+        positionY: res?.positionY ?? 0,
+        videoPlayBackPosition: res?.videoPlayBackPosition ?? 0,
+    }
+
+    chrome.runtime.sendMessage(sendData)
+    await chrome.tabs.create({
+        url
+    }, () => {
+        const sendData = {
+            positionX: res?.positionX ?? 0,
+            positionY: res?.positionY ?? 0,
+            videoPlayBackPosition: res?.videoPlayBackPosition ?? 1,
+        }
+
+        chrome.runtime.sendMessage(sendData)
+    });
 })
-
-function setVideoPlayBackPosition(videoPlayBackPosition: number) {
-    // alert("setVideoPlayBackPosition")
-    chrome.tabs.getSelected(tab => {
-        // @ts-ignore
-        chrome.tabs.executeScript(tab.id, {
-            code: `const videoPlayBackPosition = ` + videoPlayBackPosition
-        },() => {
-            // alert(`videoPlayBackPositio: ${videoPlayBackPosition}`)
-            // @ts-ignore
-            chrome.tabs.executeScript(tab.id, {
-                code: `
-                    document.getElementsByTagName('video')[0].currentTime = videoPlayBackPosition;
-                `
-            }, () => {
-                // alert("done setVideoPlayBackPosition")
-            })
-        })
-    })
-}
-
-function setScrollPosition(scrollPositionX: number, scrollPositionY: number) {
-    chrome.tabs.getSelected(tab => {
-        // @ts-ignore
-        chrome.tabs.executeScript(tab.id, {
-            code: `
-                const scrollPositionX = ${scrollPositionX}
-                const scrollPositionY = ${scrollPositionY}
-            `
-        },() => {
-            // @ts-ignore
-            chrome.tabs.executeScript(tab.id, {
-                code: `
-                    window.scrollTo(scrollPositionX, scrollPositionY);
-                `
-            }, () => {
-                // alert("done setScrollPositionY")
-            })
-        })
-    })
-}
-
-
 
 function getByStorage(key: string): Promise<MetaData|null> {
     return new Promise((resolve) => {

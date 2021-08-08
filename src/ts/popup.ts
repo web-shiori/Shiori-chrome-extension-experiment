@@ -53,7 +53,6 @@ function getScrollPositionY() {
                 resolve({ positionY })
             })
         })
-
     })
 }
 
@@ -143,7 +142,55 @@ const button_load = document.getElementById('button-load')
 button_load?.addEventListener('click', async function () {
     const res = await getByStorage(StorageKey);
     console.log('GET', res);
+    // const url = res?.url ?? ""
+    // await chrome.tabs.create({
+    //     url
+    // });
+    setScrollPosition(res?.positionX ?? 0, res?.positionY ?? 0)
+    setVideoPlayBackPosition(res?.videoPlayBackPosition ?? 0)
 })
+
+function setVideoPlayBackPosition(videoPlayBackPosition: number) {
+    // alert("setVideoPlayBackPosition")
+    chrome.tabs.getSelected(tab => {
+        // @ts-ignore
+        chrome.tabs.executeScript(tab.id, {
+            code: `const videoPlayBackPosition = ` + videoPlayBackPosition
+        },() => {
+            // alert(`videoPlayBackPositio: ${videoPlayBackPosition}`)
+            // @ts-ignore
+            chrome.tabs.executeScript(tab.id, {
+                code: `
+                    document.getElementsByTagName('video')[0].currentTime = videoPlayBackPosition;
+                `
+            }, () => {
+                // alert("done setVideoPlayBackPosition")
+            })
+        })
+    })
+}
+
+function setScrollPosition(scrollPositionX: number, scrollPositionY: number) {
+    chrome.tabs.getSelected(tab => {
+        // @ts-ignore
+        chrome.tabs.executeScript(tab.id, {
+            code: `
+                const scrollPositionX = ${scrollPositionX}
+                const scrollPositionY = ${scrollPositionY}
+            `
+        },() => {
+            // @ts-ignore
+            chrome.tabs.executeScript(tab.id, {
+                code: `
+                    window.scrollTo(scrollPositionX, scrollPositionY);
+                `
+            }, () => {
+                // alert("done setScrollPositionY")
+            })
+        })
+    })
+}
+
 
 
 function getByStorage(key: string): Promise<MetaData|null> {
